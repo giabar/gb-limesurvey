@@ -1,0 +1,37 @@
+version: '3.2'
+services:
+  limesurvey-db:
+    image: mariadb:10.2.9
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=limedbaccess
+      - MYSQL_DATABASE=limesurvey
+      - MYSQL_USER=limesurvey
+      - MYSQL_PASSWORD=limesurvey
+    volumes:
+      - db:/var/lib/mysql
+
+  limesurvey-app:
+    image: giabar/gb-limesurvey
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    links:
+      - limesurvey-db
+    environment:
+      - LIMESURVEY_DB_HOST=limesurvey-db
+      - LIMESURVEY_DB_USER=limesurvey
+      - LIMESURVEY_DB_PASSWORD=limesurvey
+      - LIMESURVEY_DB_NAME=limesurvey
+      - LIMESURVEY_ADMIN_USER=myadmin
+      - LIMESURVEY_ADMIN_PASSWORD=Passw0rd12
+      - LIMESURVEY_TABLE_PREFIX=glp_
+      - ENABLE_SSL=off
+    volumes:
+      - upload:/var/www/html/upload
+      - plugins:/var/www/html/plugins
+
+volumes:
+  db:
+  plugins:
+  upload:
