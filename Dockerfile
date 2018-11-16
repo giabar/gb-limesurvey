@@ -8,8 +8,9 @@ RUN apt-get update && apt-get install -y libc-client-dev libfreetype6-dev libmcr
     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
     && docker-php-ext-install ldap \
     && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
-    && docker-php-ext-install imap \
-    && [ "$http_proxy" != '' ] && pear config-set http_proxy $http_proxy && pecl install mcrypt-1.0.1 \
+    && docker-php-ext-install imap
+RUN if [ "$http_proxy" != "" ]; then pear config-set http_proxy $http_proxy; fi \
+    && pecl install mcrypt-1.0.1 \
     && docker-php-ext-enable mcrypt \
     && a2enmod rewrite
 RUN a2ensite default-ssl &&\
